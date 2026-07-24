@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="el">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computer Information</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .hero-container {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .hero-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: overlay;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            z-index: 0;
+            filter: blur(2px);
+            /* ---> Ελαφρύ blur */
+        }
+
+        .hero-image.active {
+            opacity: 1;
+        }
+
+        .drop-shadow-lg {
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+            /* Μεγάλη σκιά τίτλου */
+        }
+
+        .drop-shadow-md {
+            text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.6);
+            /* Μέτρια σκιά κειμένου */
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .partner-logo {
+            filter: grayscale(100%);
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+
+        .partner-logo:hover {
+            filter: grayscale(0);
+            opacity: 1;
+        }
+
+        .benefit-card {
+            transition: all 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .company-name {
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #1e3a8a 0%, #2563eb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+            position: relative;
+            padding-right: 15px;
+            margin-left: -10px; /* Added to move it slightly left */
+        }
+        
+        .company-name::after {
+            content: "";
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 60%;
+            width: 3px;
+            background: linear-gradient(to bottom, #2563eb, #1e40af);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body class="font-sans antialiased text-gray-800">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <span class="company-name text-2xl md:text-3xl">
+                            COMPUTER INFORMATION
+                        </span>
+                    </div>
+                </div>
+                <div class="hidden md:ml-6 md:flex md:items-center md:space-x-8">
+                    <a href="MainPage.html" class="ttext-gray-600 hover:text-blue-600 px-3 py-2 text-sm font-medium">Αρχική</a>
+                    <a href="#" class="text-gray-600 hover:text-blue-600 px-3 py-2 text-sm font-medium">Σχετικά</a>
+                    <a href="#contact"  class="text-blue-600 border-b-2 border-blue-600 px-3 py-2 text-sm font-medium">Επικοινωνία</a>
+                    <button
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300">
+                        Ζητήστε προσφορά
+                    </button>
+                </div>
+                <div class="-mr-2 flex items-center md:hidden">
+                    <button type="button"
+                        class="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                        aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#"
+                    class="bg-blue-100 text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Αρχική</a>
+                <a href="#"
+                    class="text-gray-600 hover:bg-gray-100 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Υπηρεσίες</a>
+                <a href="#"
+                    class="text-gray-600 hover:bg-gray-100 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Λύσεις</a>
+                <a href="#"
+                    class="text-gray-600 hover:bg-gray-100 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Σχετικά</a>
+                <a href="#contact"
+                    class="text-gray-600 hover:bg-gray-100 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Επικοινωνία</a>
+                <button
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-base font-medium mt-2 transition duration-300">
+                    Ζητήστε προσφορά
+                </button>
+            </div>
+        </div>
+    </nav>
+
+
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Επικοινωνήστε Μαζί μας</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Έχετε απορίες ή θέλετε μια προσφορά; Συμπληρώστε τη φόρμα ή χρησιμοποιήστε τα στοιχεία μας.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-12 items-start">
+                <!-- Contact Form -->
+                <div>
+                    <form action="mailto:kazazis@cominf.gr" method="POST" enctype="text/plain"
+                          class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Ονοματεπώνυμο *</label>
+                            <input type="text" name="Sender" required
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Email *</label>
+                            <input type="email" name="Contact Email" required
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Τηλέφωνο</label>
+                            <input type="tel" name="Contact Phone"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Μήνυμα *</label>
+                            <textarea name="
+                            " rows="4" required
+                                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 transition"> Αποστολή Μηνύματος </button>
+                    </form>
+                </div>
+
+                <!-- Map & Info -->
+                <div>
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1914.7762668513699!2d20.850537689134363!3d39.65854174227511!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x135be9e69e8055ff%3A0xfd0ec539309b9cd6!2sCOMPUTER%20INFORMATION!5e0!3m2!1sel!2sgr!4v1763491367971!5m2!1sel!2sgr" 
+                        class="w-full h-64 rounded-md mb-6" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                    
+                    <ul class="space-y-3 text-gray-700">
+                        <li><i class="fas fa-map-marker-alt text-blue-600 mr-2"></i>Δωδώνης 55, Ιωάννινα 45221, Ελλάδα</li>
+                        <li><i class="fas fa-phone-alt text-blue-600 mr-2"></i>26510 85560</li>
+                        <li><i class="fas fa-envelope text-blue-600 mr-2"></i>kazazis@cominf.gr</li>
+                        <li><i class="fas fa-clock text-blue-600 mr-2"></i>Δευ-Παρ | 09:00–17:00</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <div class="gradient-bg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-white mb-6">Έτοιμοι να Μεταμορφώσετε την IT Υποδομή σας;</h2>
+                <p class="text-lg text-blue-100 mb-8 max-w-3xl mx-auto">
+                    Είτε χρειάζεστε υποστήριξη λογισμικού logistics, ρύθμιση IT υποδομής είτε συνεχή τεχνική συντήρηση,
+                    η ομάδα μας είναι έτοιμη να βοηθήσει την επιχείρησή σας να πετύχει.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="#contact"
+                       class="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 rounded-md text-lg font-semibold transition duration-300">
+                        <i class="fas fa-phone-alt mr-2"></i> Επικοινωνήστε
+                    </a>
+                    <a href="mailto:kazazis@cominf.gr"
+                       class="bg-transparent border-2 border-white text-white hover:bg-white hover:text-blue-600 px-8 py-4 rounded-md text-lg font-semibold transition duration-300">
+                        <i class="fas fa-envelope mr-2"></i> Στείλτε email
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <!-- Footer -->
+    <footer class="bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-laptop-code text-blue-500 mr-2"></i>
+                        Computer Information
+                    </h3>
+                    <p class="text-gray-400">
+                        Παρέχοντας επαγγελματικές IT λύσεις και υποστήριξη λογισμικού logistics για να βοηθήσουμε τις
+                        επιχειρήσεις να ευημερήσουν στην ψηφιακή οικονομία.
+                    </p>
+                    
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Υπηρεσίες</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Λογισμικό Logistics</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Τεχνική Υποστήριξη</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Εγκατάσταση Servers</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Ρύθμιση Δικτύου</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Λύσεις Cloud</a></li>
+                    </ul>
+                </div>
+
+                <div>
+
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Στοιχεία Επικοινωνίας</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-2 text-blue-500"></i>
+                            <span>Δωδώνης 55, Ιωάννινα 45221, Ελλάδα</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone-alt mt-1 mr-2 text-blue-500"></i>
+                            <span>26510-85560</span>
+                            </n>
+
+
+                            </li>
+                            
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-2 text-blue-500"></i>
+                            <div class="flex flex-col">
+                                <span>kazazis@cominf.gr</span>
+                                <span>support@cominf.gr</span>
+                            </div>
+                        </li>
+
+                        <li class="flex items-start">
+                            <i class="fas fa-clock mt-1 mr-2 text-blue-500"></i>
+                            <span>Δευ-Παρ: 9:00 - 17:00</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm">
+                    &copy; 2023 Computer Information. Με επιφύλαξη παντός δικαιώματος.
+                </p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-400 hover:text-white text-sm">Πολιτική Απορρήτου</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm">Όροι Χρήσης</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm">Χάρτης Ιστοσελίδας</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.querySelector('nav button').addEventListener('click', function () {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Hero image rotation
+        const heroImages = document.querySelectorAll('.hero-image');
+        let currentImage = 0;
+
+        function rotateHeroImages() {
+            // Hide all images
+            heroImages.forEach(img => img.classList.remove('active'));
+
+            // Show current image
+            heroImages[currentImage].classList.add('active');
+
+            // Move to next image
+            currentImage = (currentImage + 1) % heroImages.length;
+        }
+
+        // Initial rotation
+        rotateHeroImages();
+
+        // Set interval for rotation (every 5 seconds)
+        setInterval(rotateHeroImages, 5000);
+    </script>
+</body>
+
+</html>

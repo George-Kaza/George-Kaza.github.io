@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="el">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Computer Information — Ειδήσεις Νομοθεσίας</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .card-hover:hover { transform: translateY(-6px); box-shadow: 0 10px 30px rgba(2,6,23,0.08); }
+        .excerpt { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    </style>
+</head>
+
+<body class="font-sans antialiased text-gray-800 bg-gray-50">
+    <!-- Navigation (matching main site style) -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <span class="company-name text-2xl md:text-3xl">
+                            COMPUTER INFORMATION
+                        </span>
+                    </div>
+                </div>
+                <div class="hidden md:ml-6 md:flex md:items-center md:space-x-8">
+                    <a href="MainPage.html" class="text-gray-600 hover:text-blue-600 px-3 py-2 text-sm font-medium">Αρχική</a>
+                    <a href="News_Page.html" class="text-blue-600 border-b-2 border-blue-600 px-3 py-2 text-sm font-medium">Ειδήσεις</a>
+                    <a href="Communication_Page.html" class="text-gray-600 hover:text-blue-600 px-3 py-2 text-sm font-medium">Επικοινωνία</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="bg-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Τελευταίες Ειδήσεις — Νομοθεσία & Διατάξεις</h1>
+            <p class="text-gray-600 mt-2">Συγκεντρώνουμε ανακοινώσεις από επίσημες πηγές και αξιόπιστα ειδησεογραφικά sites που αφορούν
+                αλλαγές στη νομοθεσία και υποχρεώσεις επιχειρήσεων.</p>
+        </div>
+    </header>
+
+    <!-- Controls -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <label class="text-gray-700 font-medium">Φίλτρο λέξεων (επιχειρήσεις):</label>
+            <input id="filter-input" type="text" placeholder="π.χ. myDATA, ΕΡΓΑΝΗ, ΦΗΜ, ΑΑΔΕ" class="mt-1 block w-72 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+            <button id="apply-filter" class="ml-2 bg-blue-600 text-white px-4 py-2 rounded-md">Εφαρμογή</button>
+            <button id="clear-filter" class="ml-2 bg-gray-100 text-gray-700 px-3 py-2 rounded-md">Καθαρισμός</button>
+        </div>
+        <div class="text-sm text-gray-600">Τα άρθρα συλλέγονται από RSS feeds. Αν κάποια πηγή δεν εμφανίζεται, ίσως να απαιτείται proxy λόγω CORS.</div>
+    </div>
+
+    <!-- News Grid -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+        <div id="news-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        <div id="loading" class="text-center text-gray-500 mt-6">Φόρτωση ειδήσεων...</div>
+    </main>
+
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm">
+            &copy; Computer Information — Συγκέντρωση ειδήσεων από επίσημες πηγές. Ελέγχετε πάντα την πρωτότυπη πηγή πριν την
+            λήψη αποφάσεων.
+        </div>
+    </footer>
+
+    <script>
+        /* News_Page — RSS aggregator (client-side)
+           - Uses a CORS proxy (allorigins) to fetch RSS XML and parse it in-browser
+           - Filters items by keywords related to business legislation
+           - Builds cards with title, date, excerpt and 'Διαβάστε περισσότερα' link
+           NOTE: Some sites may block scraping or have different feed URLs. Add/remove feeds in the feeds array below.
+        */
+
+        const feeds = [
+            { name: 'Kathimerini', url: 'https://www.kathimerini.gr/infeeds/rss/nx-rss-feed.xml' },
+            { name: 'Capital', url: 'https://www.capital.gr/rss' },
+            { name: 'Euro2day', url: 'https://www.euro2day.gr/infeeds/rss/main_rss.xml' },
+            { name: 'TaxHeaven', url: 'https://www.taxheaven.gr/rss' },
+            { name: 'ΓΓΕ (Μίν. Ανάπτυξης)', url: 'https://gge.mindev.gov.gr/home/rss-feeds/' }
+            // <--- Προσθέστε εδώ κι άλλες feeds που θέλετε
+        ];
+
+        const keywords = ['myDATA', 'ΑΑΔΕ', 'ΕΡΓΑΝΗ', 'ΦΗΜ', 'POS', 'τιμολόγι', 'ηλεκτρον', 'νόμος', 'νομοσχέδιο', 'διατάξ', 'εγκύκλιο'];
+
+        const grid = document.getElementById('news-grid');
+        const loading = document.getElementById('loading');
+        const filterInput = document.getElementById('filter-input');
+        const applyFilter = document.getElementById('apply-filter');
+        const clearFilter = document.getElementById('clear-filter');
+
+        // Utility: fetch RSS via allorigins proxy to avoid CORS
+        async function fetchRSS(url) {
+            try {
+                const proxy = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+                const res = await fetch(proxy);
+                if (!res.ok) throw new Error('Network response not ok');
+                const text = await res.text();
+                return (new window.DOMParser()).parseFromString(text, 'text/xml');
+            } catch (e) {
+                console.warn('fetchRSS failed for', url, e);
+                return null;
+            }
+        }
+
+        // Extract items from XML (supports RSS & Atom)
+        function extractItems(xml) {
+            if (!xml) return [];
+            const items = [];
+            const rssItems = xml.querySelectorAll('item');
+            if (rssItems.length) {
+                rssItems.forEach(it => {
+                    const title = it.querySelector('title') ? it.querySelector('title').textContent : '';
+                    const link = it.querySelector('link') ? it.querySelector('link').textContent : (it.querySelector('guid') ? it.querySelector('guid').textContent : '#');
+                    const descNode = it.querySelector('description') || it.querySelector('content\\:encoded');
+                    const description = descNode ? descNode.textContent : '';
+                    const pubDate = it.querySelector('pubDate') ? it.querySelector('pubDate').textContent : '';
+                    items.push({ title, link, description, pubDate });
+                });
+                return items;
+            }
+            // Atom
+            const atomEntries = xml.querySelectorAll('entry');
+            atomEntries.forEach(it => {
+                const title = it.querySelector('title') ? it.querySelector('title').textContent : '';
+                const linkNode = it.querySelector('link');
+                const link = linkNode ? (linkNode.getAttribute('href') || linkNode.textContent) : '#';
+                const description = it.querySelector('summary') ? it.querySelector('summary').textContent : (it.querySelector('content') ? it.querySelector('content').textContent : '');
+                const pubDate = it.querySelector('updated') ? it.querySelector('updated').textContent : '';
+                items.push({ title, link, description, pubDate });
+            });
+            return items;
+        }
+
+        function matchesKeywords(text, extraFilter) {
+            if (!text) return false;
+            const t = text.toLowerCase();
+            const kws = extraFilter ? extraFilter.concat(keywords) : keywords;
+            return kws.some(k => t.includes(k.toLowerCase()));
+        }
+
+        function makeCard(item) {
+            const div = document.createElement('article');
+            div.className = 'bg-white rounded-lg p-6 shadow-sm card-hover';
+            const date = item.pubDate ? new Date(item.pubDate).toLocaleString('el-GR') : '';
+            const excerpt = item.description ? (item.description.replace(/<[^>]+>/g, '').trim()) : '';
+
+            div.innerHTML = `
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">${item.title}</h3>
+                <p class="text-xs text-gray-500 mb-3">${date}</p>
+                <p class="text-gray-700 excerpt">${excerpt}</p>
+                <div class="mt-4 flex items-center justify-between">
+                    <a href="${item.link}" target="_blank" class="text-blue-600 font-medium inline-flex items-center">Διαβάστε περισσότερα <i class="fas fa-arrow-right ml-2"></i></a>
+                    <button class="text-sm text-gray-500 copy-link" data-link="${item.link}"><i class="fas fa-copy mr-2"></i>Αντιγραφή</button>
+                </div>
+            `;
+
+            return div;
+        }
+
+        // Main fetch + render
+        async function loadAllFeeds(extraFilter = []) {
+            grid.innerHTML = '';
+            loading.style.display = 'block';
+
+            const allItems = [];
+
+            for (const f of feeds) {
+                const xml = await fetchRSS(f.url);
+                if (!xml) continue;
+                const items = extractItems(xml);
+                items.forEach(it => {
+                    // basic match: title or description contains keyword OR user-provided filter
+                    if (matchesKeywords(it.title + ' ' + it.description, extraFilter)) {
+                        allItems.push(it);
+                    }
+                });
+            }
+
+            // fallback: if no items matched, show recent items (first 20)
+            if (allItems.length === 0) {
+                // re-run but accept all from feeds
+                for (const f of feeds) {
+                    const xml = await fetchRSS(f.url);
+                    if (!xml) continue;
+                    const items = extractItems(xml);
+                    allItems.push(...items.slice(0, 5));
+                }
+            }
+
+            // sort by pubDate desc if available
+            allItems.sort((a, b) => {
+                const da = a.pubDate ? new Date(a.pubDate).getTime() : 0;
+                const db = b.pubDate ? new Date(b.pubDate).getTime() : 0;
+                return db - da;
+            });
+
+            // render up to 30 items
+            const toShow = allItems.slice(0, 30);
+            toShow.forEach(item => grid.appendChild(makeCard(item)));
+
+            loading.style.display = 'none';
+
+            // attach copy link handlers
+            document.querySelectorAll('.copy-link').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const url = e.currentTarget.dataset.link;
+                    navigator.clipboard.writeText(url).then(() => {
+                        e.currentTarget.textContent = 'Αντιγράφηκε';
+                        setTimeout(() => e.currentTarget.innerHTML = '<i class="fas fa-copy mr-2"></i>Αντιγραφή', 1500);
+                    });
+                });
+            });
+        }
+
+        // initial load
+        loadAllFeeds();
+
+        applyFilter.addEventListener('click', () => {
+            const txt = filterInput.value.split(',').map(s => s.trim()).filter(Boolean);
+            loadAllFeeds(txt);
+        });
+
+        clearFilter.addEventListener('click', () => {
+            filterInput.value = '';
+            loadAllFeeds([]);
+        });
+
+    </script>
+</body>
+
+</html>
